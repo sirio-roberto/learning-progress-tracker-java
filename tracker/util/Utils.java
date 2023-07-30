@@ -1,5 +1,6 @@
 package tracker.util;
 
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,5 +64,11 @@ public class Utils {
         }
         Matcher matcher = Pattern.compile("['-]{2,}").matcher(name);
         return matcher.find();
+    }
+
+    public static String getRandomId() {
+        Random random = new Random();
+        int intId = random.nextInt(100000000);
+        return String.format("%8s", intId).replaceAll(" ", "0");
     }
 }

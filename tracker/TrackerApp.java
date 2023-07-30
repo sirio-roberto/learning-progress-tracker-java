@@ -4,18 +4,19 @@ import tracker.entities.Student;
 import tracker.util.InputHandler;
 import tracker.util.Utils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 public class TrackerApp {
     private boolean isAppRunning;
     private final InputHandler in;
     private final HashSet<Command> commands;
+    private final HashSet<Student> students;
 
     public TrackerApp() {
         isAppRunning = false;
         in = new InputHandler();
+        students = new LinkedHashSet<>();
 
         commands = new HashSet<>();
         commands.add(new AddStudentsCommand("add students"));
@@ -70,7 +71,7 @@ public class TrackerApp {
 
         @Override
         public void execute() {
-            List<Student> students = new ArrayList<>();
+            int addedStudents = 0;
 
             System.out.println("Enter student credentials or 'back' to return:");
             String credentials = in.getNextString();
@@ -82,12 +83,18 @@ public class TrackerApp {
                     String lastName = Utils.getMiddleStringFromArray(fields);
                     String emailAddress = fields[fields.length - 1];
 
-                    students.add(new Student(firstName, lastName, emailAddress));
-                    System.out.println("The student has been added.");
+                    Student student = new Student(firstName, lastName, emailAddress);
+                    if (students.contains(student)) {
+                        System.out.println("This email is already taken.");
+                    } else {
+                        students.add(student);
+                        addedStudents++;
+                        System.out.println("The student has been added.");
+                    }
                 }
                 credentials = in.getNextString();
             }
-            System.out.printf("Total %s students have been added.\n", students.size());
+            System.out.printf("Total %s students have been added.\n", addedStudents);
         }
     }
 
