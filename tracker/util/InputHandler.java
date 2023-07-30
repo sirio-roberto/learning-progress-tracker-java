@@ -13,6 +13,6 @@ public class InputHandler {
         if (userInput == null || userInput.isBlank()) {
             return "";
         }
-        return userInput;
+        return userInput.trim();
     }
 }
