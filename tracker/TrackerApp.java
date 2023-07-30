@@ -30,6 +30,8 @@ public class TrackerApp {
             String userInput = in.getNextString();
             if (userInput.isBlank()) {
                 System.out.println("No input.");
+            } else if ("back".equals(userInput)) {
+                System.out.println("Enter 'exit' to exit the program.");
             } else {
                 executeCommandIfExists(userInput);
             }

@@ -1,5 +1,8 @@
 package tracker.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Utils {
     public static String getMiddleStringFromArray(String[] fields) {
         StringBuilder result = new StringBuilder();
@@ -10,6 +13,55 @@ public class Utils {
     }
 
     public static boolean areValidUserCredentials(String credentials) {
+        if (credentials.isBlank()) {
+            System.out.println("Incorrect credentials.");
+            return false;
+        }
+        String[] fields = credentials.split(" ");
+        if (fields.length < 3) {
+            System.out.println("Incorrect credentials.");
+            return false;
+        }
+        String firstName = fields[0];
+        if (isInvalidName(firstName)) {
+            System.out.println("Incorrect first name.");
+            return false;
+        }
+        String lastName = getMiddleStringFromArray(fields);
+        if (!areValidNames(lastName)) {
+            System.out.println("Incorrect last name.");
+            return false;
+        }
+        String emailAddress = fields[fields.length - 1];
+        if (!isValidEmailAddress(emailAddress)) {
+            System.out.println("Incorrect email");
+            return false;
+        }
         return true;
+    }
+
+    private static boolean isValidEmailAddress(String emailAddress) {
+        return emailAddress.matches("(?i)[a-z0-9.]+@[a-z0-9]+\\.[a-z0-9]+");
+    }
+
+    private static boolean areValidNames(String lastName) {
+        String[] names = lastName.split(" ");
+        for (String name: names) {
+            if (isInvalidName(name)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isInvalidName(String name) {
+        if (name.length() < 2) {
+            return true;
+        }
+        if (!name.matches("(?i)[a-z]+[a-z'-]*[a-z]+")) {
+            return true;
+        }
+        Matcher matcher = Pattern.compile("['-]{2,}").matcher(name);
+        return matcher.find();
     }
 }
