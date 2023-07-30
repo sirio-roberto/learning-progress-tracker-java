@@ -20,6 +20,7 @@ public class TrackerApp {
 
         commands = new HashSet<>();
         commands.add(new AddStudentsCommand("add students"));
+        commands.add(new ListCommand("list"));
         commands.add(new ExitCommand("exit"));
     }
 
@@ -95,6 +96,23 @@ public class TrackerApp {
                 credentials = in.getNextString();
             }
             System.out.printf("Total %s students have been added.\n", addedStudents);
+        }
+    }
+
+    class ListCommand extends Command {
+
+        public ListCommand(String name) {
+            super(name);
+        }
+
+        @Override
+        void execute() {
+            if (students.isEmpty()) {
+                System.out.println("No students found");
+            } else {
+                System.out.println("Students:");
+                students.forEach(s -> System.out.println(s.getId()));
+            }
         }
     }
 

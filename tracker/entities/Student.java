@@ -17,6 +17,22 @@ public class Student {
         this.emailAddress = emailAddress;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
