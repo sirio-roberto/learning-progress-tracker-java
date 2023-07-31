@@ -78,7 +78,7 @@ public class Student {
         return Objects.hash(emailAddress);
     }
 
-    enum Course {
+    public enum Course {
         JAVA("Java"),
         DSA("DSA"),
         DATABASES("Databases"),

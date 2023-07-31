@@ -22,9 +22,10 @@ public class TrackerApp {
         commands = new HashSet<>();
         commands.add(new AddStudentsCommand("add students"));
         commands.add(new ListCommand("list"));
-        commands.add(new ExitCommand("exit"));
         commands.add(new AddPointsCommand("add points"));
         commands.add(new FindCommand("find"));
+        commands.add(new StatisticsCommand("statistics"));
+        commands.add(new ExitCommand("exit"));
     }
 
     public void run() {
@@ -170,6 +171,41 @@ public class TrackerApp {
                 }
                 userInput = in.getNextString();
             }
+        }
+    }
+
+    class StatisticsCommand extends Command {
+
+        public StatisticsCommand(String name) {
+            super(name);
+        }
+
+        @Override
+        void execute() {
+            System.out.println("Type the name of a course to see details or 'back' to quit:");
+            printCourseStatistics();
+            String userInput = in.getNextString();
+            while (!"back".equals(userInput)) {
+                try {
+                    Student.Course course = Student.Course.valueOf(userInput.toUpperCase());
+                    System.out.println(course.getName());
+                    // TODO: create maybe an entity for this table row
+                } catch (IllegalArgumentException ex) {
+                    System.out.println("Unknown course.");
+                }
+
+                userInput = in.getNextString();
+            }
+        }
+
+        private void printCourseStatistics() {
+            System.out.println("""
+                    Most popular: n/a
+                    Least popular: n/a
+                    Highest activity: n/a
+                    Lowest activity: n/a
+                    Easiest course: n/a
+                    Hardest course: n/a""");
         }
     }
 
