@@ -1,12 +1,14 @@
 package tracker;
 
 import tracker.entities.Student;
+import tracker.entities.StudentScore;
 import tracker.util.InputHandler;
 import tracker.util.Utils;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 public class TrackerApp {
     private boolean isAppRunning;
@@ -188,8 +190,15 @@ public class TrackerApp {
             while (!"back".equals(userInput)) {
                 try {
                     Student.Course course = Student.Course.valueOf(userInput.toUpperCase());
+                    List<StudentScore> orderedScores = students.stream()
+                            .map(s -> new StudentScore(s, course))
+                            .filter(score -> score.getPoints() > 0)
+                            .sorted()
+                            .toList();
+
                     System.out.println(course.getName());
-                    // TODO: create maybe an entity for this table row
+                    System.out.println("id       points completed");
+                    orderedScores.forEach(System.out::println);
                 } catch (IllegalArgumentException ex) {
                     System.out.println("Unknown course.");
                 }

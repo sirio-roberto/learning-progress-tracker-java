@@ -36,6 +36,10 @@ public class Student {
         return emailAddress;
     }
 
+    public Map<Course, Integer> getCourses() {
+        return courses;
+    }
+
     private Map<Course, Integer> initCourses() {
         Map<Course, Integer> map = new LinkedHashMap<>();
         for (Course course: Course.values()) {
@@ -79,19 +83,25 @@ public class Student {
     }
 
     public enum Course {
-        JAVA("Java"),
-        DSA("DSA"),
-        DATABASES("Databases"),
-        SPRING("Spring");
+        JAVA("Java", 600),
+        DSA("DSA", 400),
+        DATABASES("Databases", 480),
+        SPRING("Spring", 550);
 
         private final String name;
+        private final int pointsToComplete;
 
-        Course(String name) {
+        Course(String name, int pointsToComplete) {
             this.name = name;
+            this.pointsToComplete = pointsToComplete;
         }
 
         public String getName() {
             return name;
+        }
+
+        public int getPointsToComplete() {
+            return pointsToComplete;
         }
     }
 }
