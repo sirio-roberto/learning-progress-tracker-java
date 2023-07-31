@@ -2,7 +2,7 @@ package tracker.entities;
 
 import tracker.util.Utils;
 
-import java.util.Objects;
+import java.util.*;
 
 public class Student {
     private String id;
@@ -10,11 +10,14 @@ public class Student {
     private String lastName;
     private String emailAddress;
 
+    private Map<Course, Integer> courses;
+
     public Student(String firstName, String lastName, String emailAddress) {
         this.id = Utils.getRandomId();
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
+        this.courses = initCourses();
     }
 
     public String getId() {
@@ -33,6 +36,23 @@ public class Student {
         return emailAddress;
     }
 
+    private Map<Course, Integer> initCourses() {
+        Map<Course, Integer> map = new LinkedHashMap<>();
+        for (Course course: Course.values()) {
+            map.put(course, 0);
+        }
+        return map;
+    }
+
+    public void addPoints(String[] pointsArray) {
+        int index = 0;
+        for (Course course: courses.keySet()) {
+            int points = Integer.parseInt(pointsArray[index]);
+            courses.put(course, courses.get(course) + points);
+            index++;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -44,5 +64,22 @@ public class Student {
     @Override
     public int hashCode() {
         return Objects.hash(emailAddress);
+    }
+
+    enum Course {
+        JAVA("Java"),
+        DSA("DSA"),
+        DATABASES("Databases"),
+        SPRING("Spring");
+
+        private final String name;
+
+        Course(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }

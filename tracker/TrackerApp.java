@@ -4,6 +4,7 @@ import tracker.entities.Student;
 import tracker.util.InputHandler;
 import tracker.util.Utils;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 
@@ -22,6 +23,7 @@ public class TrackerApp {
         commands.add(new AddStudentsCommand("add students"));
         commands.add(new ListCommand("list"));
         commands.add(new ExitCommand("exit"));
+        commands.add(new AddPointsCommand("add points"));
     }
 
     public void run() {
@@ -50,8 +52,8 @@ public class TrackerApp {
         System.out.println("Error: unknown command!");
     }
 
-    abstract class Command {
-        private String name;
+    abstract static class Command {
+        private final String name;
 
         public Command(String name) {
             this.name = name;
@@ -112,6 +114,36 @@ public class TrackerApp {
             } else {
                 System.out.println("Students:");
                 students.forEach(s -> System.out.println(s.getId()));
+            }
+        }
+    }
+
+    class AddPointsCommand extends Command {
+
+        public AddPointsCommand(String name) {
+            super(name);
+        }
+
+        @Override
+        void execute() {
+            System.out.println("Enter an id and points or 'back' to return:");
+            String userInput = in.getNextString();
+            while (!"back".equals(userInput)) {
+                if (Utils.isValidPointsFormat(userInput)) {
+                    String[] fields = userInput.split(" ");
+                    String id = fields[0];
+                    Student student = Utils.getStudentById(students, id);
+
+                    if (student != null) {
+                        student.addPoints(Arrays.copyOfRange(fields, 1, fields.length));
+                        System.out.println("Points updated.");
+                    } else {
+                        System.out.printf("No student is found for id=%s.\n", id);
+                    }
+                } else {
+                    System.out.println("Incorrect points format.");
+                }
+                userInput = in.getNextString();
             }
         }
     }

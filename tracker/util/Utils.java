@@ -1,5 +1,8 @@
 package tracker.util;
 
+import tracker.entities.Student;
+
+import java.util.HashSet;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,5 +73,16 @@ public class Utils {
         Random random = new Random();
         int intId = random.nextInt(100000000);
         return String.format("%8s", intId).replaceAll(" ", "0");
+    }
+
+    public static Student getStudentById(HashSet<Student> students, String id) {
+        return students.stream()
+                .filter(s -> s.getId().equals(id))
+                .findAny()
+                .orElse(null);
+    }
+
+    public static boolean isValidPointsFormat(String userInput) {
+        return userInput.matches("(?i)[a-z0-9]+ \\d+ \\d+ \\d+ \\d+");
     }
 }
