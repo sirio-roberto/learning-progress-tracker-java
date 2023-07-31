@@ -54,6 +54,18 @@ public class Student {
     }
 
     @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder(getId());
+        result.append(" points: ");
+        for (Course course: courses.keySet()) {
+            result.append(course.getName()).append("=").append(courses.get(course)).append("; ");
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.deleteCharAt(result.length() - 1);
+        return result.toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

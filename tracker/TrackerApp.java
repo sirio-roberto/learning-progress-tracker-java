@@ -24,6 +24,7 @@ public class TrackerApp {
         commands.add(new ListCommand("list"));
         commands.add(new ExitCommand("exit"));
         commands.add(new AddPointsCommand("add points"));
+        commands.add(new FindCommand("find"));
     }
 
     public void run() {
@@ -114,6 +115,30 @@ public class TrackerApp {
             } else {
                 System.out.println("Students:");
                 students.forEach(s -> System.out.println(s.getId()));
+            }
+        }
+    }
+
+    class FindCommand extends Command {
+
+        public FindCommand(String name) {
+            super(name);
+        }
+
+        @Override
+        void execute() {
+            System.out.println("Enter an id or 'back' to return:");
+            String userInput = in.getNextString();
+            while (!"back".equals(userInput)) {
+                Student student = Utils.getStudentById(students, userInput);
+
+                if (student != null) {
+                    System.out.println(student);
+                } else {
+                    System.out.printf("No student is found for id=%s.\n", userInput);
+                }
+
+                userInput = in.getNextString();
             }
         }
     }
