@@ -1,25 +1,25 @@
 package tracker;
 
+import tracker.entities.CourseStatistics;
 import tracker.entities.Student;
 import tracker.entities.StudentScore;
 import tracker.util.InputHandler;
 import tracker.util.Utils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 public class TrackerApp {
     private boolean isAppRunning;
     private final InputHandler in;
-    private final HashSet<Command> commands;
-    private final HashSet<Student> students;
+    private final Set<Command> commands;
+    private final Set<Student> students;
+    private final Set<CourseStatistics> courseStatistics;
 
     public TrackerApp() {
         isAppRunning = false;
         in = new InputHandler();
         students = new LinkedHashSet<>();
+        courseStatistics = CourseStatistics.initCourseStatisticsSet();
 
         commands = new HashSet<>();
         commands.add(new AddStudentsCommand("add students"));
@@ -164,6 +164,7 @@ public class TrackerApp {
 
                     if (student != null) {
                         student.addPoints(Arrays.copyOfRange(fields, 1, fields.length));
+                        updateStatistics(fields);
                         System.out.println("Points updated.");
                     } else {
                         System.out.printf("No student is found for id=%s.\n", id);
@@ -172,6 +173,22 @@ public class TrackerApp {
                     System.out.println("Incorrect points format.");
                 }
                 userInput = in.getNextString();
+            }
+        }
+
+        private void updateStatistics(String[] fields) {
+            // 'fields' is an array of 5 Strings, where the [0] is the studentId ant the other ones are courses:
+            // [1]=Java, [2]=DSA, [3]=Databases, [4]=Spring
+            for (CourseStatistics statistics: courseStatistics) {
+                if (statistics.getCourse() == Student.Course.JAVA) {
+                    statistics.updateStatistics(fields[0], Integer.parseInt(fields[1]));
+                } else if (statistics.getCourse() == Student.Course.DSA) {
+                    statistics.updateStatistics(fields[0], Integer.parseInt(fields[2]));
+                } else if (statistics.getCourse() == Student.Course.DATABASES) {
+                    statistics.updateStatistics(fields[0], Integer.parseInt(fields[3]));
+                } else {
+                    statistics.updateStatistics(fields[0], Integer.parseInt(fields[4]));
+                }
             }
         }
     }
@@ -208,13 +225,20 @@ public class TrackerApp {
         }
 
         private void printCourseStatistics() {
-            System.out.println("""
-                    Most popular: n/a
-                    Least popular: n/a
-                    Highest activity: n/a
-                    Lowest activity: n/a
-                    Easiest course: n/a
-                    Hardest course: n/a""");
+            System.out.printf("""
+                    Most popular: %s
+                    Least popular: %s
+                    Highest activity: %s
+                    Lowest activity: %s
+                    Easiest course: %s
+                    Hardest course: %s
+                    """,
+                    Utils.getSetStringOrNA(CourseStatistics.getMostPopularCourses(courseStatistics)),
+                    Utils.getSetStringOrNA(CourseStatistics.getLeastPopularCourses(courseStatistics)),
+                    Utils.getSetStringOrNA(CourseStatistics.getCoursesWithHighestActivity(courseStatistics)),
+                    Utils.getSetStringOrNA(CourseStatistics.getCoursesWithLowestActivity(courseStatistics)),
+                    Utils.getSetStringOrNA(CourseStatistics.getEasiestCourses(courseStatistics)),
+                    Utils.getSetStringOrNA(CourseStatistics.getHardestCourses(courseStatistics)));
         }
     }
 

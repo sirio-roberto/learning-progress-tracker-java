@@ -22,7 +22,7 @@ public class StudentScore implements Comparable<StudentScore> {
 
     @Override
     public String toString() {
-        return String.format("%8s %6s %.1f%%", id, points, completedPercentage);
+        return String.format("%8s %-6s %.1f%%", id, points, completedPercentage);
     }
 
     @Override

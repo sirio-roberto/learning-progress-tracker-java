@@ -4,6 +4,7 @@ import tracker.entities.Student;
 
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,7 +76,7 @@ public class Utils {
         return String.format("%8s", intId).replaceAll(" ", "0");
     }
 
-    public static Student getStudentById(HashSet<Student> students, String id) {
+    public static Student getStudentById(Set<Student> students, String id) {
         return students.stream()
                 .filter(s -> s.getId().equals(id))
                 .findAny()
@@ -84,5 +85,13 @@ public class Utils {
 
     public static boolean isValidPointsFormat(String userInput) {
         return userInput.matches("(?i)[a-z0-9]+ \\d+ \\d+ \\d+ \\d+");
+    }
+
+    public static String getSetStringOrNA(Set<Student.Course> courses) {
+        if (courses.isEmpty()) {
+            return "n/a";
+        }
+
+        return String.join(", ", courses.stream().map(Student.Course::getName).toList());
     }
 }

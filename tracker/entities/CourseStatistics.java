@@ -95,7 +95,7 @@ public class CourseStatistics {
     }
 
     public static Set<Student.Course> getCoursesWithLowestActivity(Set<CourseStatistics> courseStatistics) {
-        Set<Student.Course> highestActivity = getMostPopularCourses(courseStatistics);
+        Set<Student.Course> highestActivity = getCoursesWithHighestActivity(courseStatistics);
         if (highestActivity.isEmpty()) {
             return new HashSet<>();
         }
@@ -115,7 +115,7 @@ public class CourseStatistics {
 
     public static Set<Student.Course> getHardestCourses(Set<CourseStatistics> courseStatistics) {
         CourseStatistics hardest = courseStatistics.stream()
-                .max(Comparator.comparingDouble(CourseStatistics::getAverageScore))
+                .min(Comparator.comparingDouble(CourseStatistics::getAverageScore))
                 .filter(stat -> stat.getAverageScore() > 0.0)
                 .orElse(null);
 
@@ -129,12 +129,12 @@ public class CourseStatistics {
     }
 
     public static Set<Student.Course> getEasiestCourses(Set<CourseStatistics> courseStatistics) {
-        Set<Student.Course> hardest = getMostPopularCourses(courseStatistics);
+        Set<Student.Course> hardest = getHardestCourses(courseStatistics);
         if (hardest.isEmpty()) {
             return new HashSet<>();
         }
         CourseStatistics easiest = courseStatistics.stream()
-                .min(Comparator.comparingDouble(CourseStatistics::getAverageScore))
+                .max(Comparator.comparingDouble(CourseStatistics::getAverageScore))
                 .filter(stat -> stat.getAverageScore() > 0.0)
                 .orElse(null);
 
@@ -145,5 +145,13 @@ public class CourseStatistics {
                 .filter(stat -> stat.getAverageScore() == easiest.getAverageScore())
                 .map(CourseStatistics::getCourse)
                 .collect(Collectors.toSet());
+    }
+
+    public static Set<CourseStatistics> initCourseStatisticsSet() {
+        Set<CourseStatistics> courseStatistics = new HashSet<>();
+        for (Student.Course course: Student.Course.values()) {
+            courseStatistics.add(new CourseStatistics(course));
+        }
+        return courseStatistics;
     }
 }
