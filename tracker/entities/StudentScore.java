@@ -1,9 +1,9 @@
 package tracker.entities;
 
 public class StudentScore implements Comparable<StudentScore> {
-    private String id;
-    private int points;
-    private double completedPercentage;
+    private final String id;
+    private final int points;
+    private final double completedPercentage;
 
     public StudentScore (Student student, Student.Course course) {
         this.id = student.getId();

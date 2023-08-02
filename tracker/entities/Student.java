@@ -2,14 +2,13 @@ package tracker.entities;
 
 import tracker.util.Utils;
 
-import java.rmi.MarshalledObject;
 import java.util.*;
 
 public class Student {
-    private String id;
-    private String firstName;
-    private String lastName;
-    private String emailAddress;
+    private final String id;
+    private final String firstName;
+    private final String lastName;
+    private final String emailAddress;
 
     private Map<Course, Integer> courses;
     private Map<Course, Boolean> courseCompletionMap;
