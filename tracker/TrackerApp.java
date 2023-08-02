@@ -27,6 +27,7 @@ public class TrackerApp {
         commands.add(new AddPointsCommand("add points"));
         commands.add(new FindCommand("find"));
         commands.add(new StatisticsCommand("statistics"));
+        commands.add(new NotifyCommand("notify"));
         commands.add(new ExitCommand("exit"));
     }
 
@@ -239,6 +240,36 @@ public class TrackerApp {
                     Utils.getSetStringOrNA(CourseStatistics.getCoursesWithLowestActivity(courseStatistics)),
                     Utils.getSetStringOrNA(CourseStatistics.getEasiestCourses(courseStatistics)),
                     Utils.getSetStringOrNA(CourseStatistics.getHardestCourses(courseStatistics)));
+        }
+    }
+
+    class NotifyCommand extends Command {
+
+        public NotifyCommand(String name) {
+            super(name);
+        }
+
+        @Override
+        void execute() {
+            int notifiedStudents = 0;
+            for (Student student: students) {
+                Set<Student.Course> stuCompCourses = student.getRecentlyCompletedCourses();
+                if (!stuCompCourses.isEmpty()) {
+                    notifiedStudents++;
+                    stuCompCourses.forEach(c -> {
+                        System.out.printf("""
+                                To: %s
+                                Re: Your Learning Progress
+                                Hello, %s %s! You have accomplished our %s course!
+                                """,
+                                student.getEmailAddress(),
+                                student.getFirstName(),
+                                student.getLastName(),
+                                c.getName());
+                    });
+                }
+            }
+            System.out.printf("Total %s students have been notified.\n", notifiedStudents);
         }
     }
 

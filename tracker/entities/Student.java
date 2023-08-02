@@ -2,6 +2,7 @@ package tracker.entities;
 
 import tracker.util.Utils;
 
+import java.rmi.MarshalledObject;
 import java.util.*;
 
 public class Student {
@@ -11,13 +12,14 @@ public class Student {
     private String emailAddress;
 
     private Map<Course, Integer> courses;
+    private Map<Course, Boolean> courseCompletionMap;
 
     public Student(String firstName, String lastName, String emailAddress) {
         this.id = Utils.getRandomId();
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
-        this.courses = initCourses();
+        initCourses();
     }
 
     public String getId() {
@@ -40,12 +42,14 @@ public class Student {
         return courses;
     }
 
-    private Map<Course, Integer> initCourses() {
-        Map<Course, Integer> map = new LinkedHashMap<>();
+    private void initCourses() {
+        courses = new LinkedHashMap<>();
+        courseCompletionMap = new LinkedHashMap<>();
+
         for (Course course: Course.values()) {
-            map.put(course, 0);
+            courses.put(course, 0);
+            courseCompletionMap.put(course, false);
         }
-        return map;
     }
 
     public void addPoints(String[] pointsArray) {
@@ -55,6 +59,19 @@ public class Student {
             courses.put(course, courses.get(course) + points);
             index++;
         }
+    }
+
+    public Set<Course> getRecentlyCompletedCourses() {
+        Set<Course> compCourses = new HashSet<>();
+        for (Course course: Course.values()) {
+            if (courses.get(course) >= course.pointsToComplete) {
+                if (!courseCompletionMap.get(course)) {
+                    compCourses.add(course);
+                    courseCompletionMap.put(course, true);
+                }
+            }
+        }
+        return compCourses;
     }
 
     @Override
